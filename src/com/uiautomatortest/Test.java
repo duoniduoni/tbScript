@@ -107,7 +107,57 @@ public class Test extends UiAutomatorTestCase {
 		
 		Log.d(Tag, "try to start search activity !");
 		entrySearchPage();
+		
+		searchResults sr = new searchResults("com.taobao.taobao:id/search_listview", "android.support.v7.widget.RecyclerView");
+		
+		boolean isFind = false;
+		UiObject target = null;
+		for (int t = 0; t < 10; t++) {
+			sr.initialResults();
+			for (int i = 0; i < sr.contents.size(); i++) {
+				Log.d(Tag, "the " + i + "th contehnt is "
+						+ sr.contents.get(i).title + " | "
+						+ sr.contents.get(i).bound.toString());
 
+				if (sr.contents.get(i).title
+						.equals("精灵王刀剑 霍比特人魔戒指环王剑工艺品装饰挂板影视包邮未开刃")) {
+					
+					Log.d(Tag, "*******  Find the target Item !!!! ********");
+					target = sr.contents.get(i).obj;
+					isFind = true;
+					break;
+				}
+
+			}
+
+			if (isFind)
+				break;
+
+			sr.scrollResults();
+		}
+
+		Log.d(Tag, "查看商品 上下拖动! ");
+		if (target.exists()) {
+			
+			try {
+				target.clickAndWaitForNewWindow();
+			} catch (UiObjectNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			int width = UiDevice.getInstance().getDisplayWidth();
+			int height = UiDevice.getInstance().getDisplayHeight();
+
+			for (int tmp = 0; tmp < 6; tmp++)
+				UiDevice.getInstance().drag(width / 2, height * 2 / 3,
+						width / 2, height / 3, 30);
+
+			for (int tmp = 0; tmp < 6; tmp++)
+				UiDevice.getInstance().drag(width / 2, height / 3, width / 2,
+						height * 2 / 3, 30);
+		}
+		/*
 		int count = 0;		
 		//try to drag		
 		try {
@@ -153,6 +203,6 @@ public class Test extends UiAutomatorTestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 	}
 }
