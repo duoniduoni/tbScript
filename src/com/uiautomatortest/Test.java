@@ -118,7 +118,7 @@ public class Test extends UiAutomatorTestCase {
 				Log.d(Tag, "the " + i + "th contehnt is "
 						+ sr.contents.get(i).title + " | "
 						+ sr.contents.get(i).bound.toString());
-
+/*
 				if (sr.contents.get(i).title
 						.equals("精灵王刀剑 霍比特人魔戒指环王剑工艺品装饰挂板影视包邮未开刃")) {
 					
@@ -127,7 +127,7 @@ public class Test extends UiAutomatorTestCase {
 					isFind = true;
 					break;
 				}
-
+*/
 			}
 
 			if (isFind)
@@ -157,52 +157,5 @@ public class Test extends UiAutomatorTestCase {
 				UiDevice.getInstance().drag(width / 2, height / 3, width / 2,
 						height * 2 / 3, 30);
 		}
-		/*
-		int count = 0;		
-		//try to drag		
-		try {
-			UiObject results = getSearchResults();
-			count = results.getChildCount();
-			count -= 2;
-			
-			for(int i = 0; i < count; i++)
-			{
-				UiObject item = getSearchItem(results, i);
-				Log.d(Tag, "the " + i + "th result is : " + item.getText());
-			}
-			UiObject begin = getSearchItem(results,  0);
-			UiObject end = getSearchItem(results, count - 1);
-			UiDevice.getInstance().drag(end.getBounds().centerX(), end.getBounds().centerY(), begin.getBounds().centerX(), begin.getBounds().centerY(), 30);
-			
-			results = getSearchResults();
-			count = results.getChildCount();
-			count -= 2;
-			
-			for(int i = 0; i < count; i++)
-			{
-				UiObject item = getSearchItem(results, i);
-				Log.d(Tag, "the " + i + "th result is : " + item.getText());
-			}
-			begin = getSearchItem(results,  0);
-			end = getSearchItem(results, count - 1);
-			UiDevice.getInstance().drag(begin.getBounds().centerX(), begin.getBounds().centerY(), end.getBounds().centerX(), end.getBounds().centerY(), 30);
-			
-			begin.clickAndWaitForNewWindow();
-			
-			Log.d(Tag, "查看商品 上下拖动! ");
-			int width = UiDevice.getInstance().getDisplayWidth();
-			int height = UiDevice.getInstance().getDisplayHeight();
-			
-			for(int tmp = 0; tmp < 6; tmp ++)
-				UiDevice.getInstance().drag(width / 2, height * 2 / 3, width / 2, height / 3, 30);
-			
-			for(int tmp = 0; tmp < 6; tmp ++)
-				UiDevice.getInstance().drag(width / 2, height / 3, width / 2, height * 2 / 3, 30);
-			
-		} catch (UiObjectNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 	}
 }
