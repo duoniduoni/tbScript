@@ -118,7 +118,7 @@ public class Test extends UiAutomatorTestCase {
 				Log.d(Tag, "the " + i + "th contehnt is "
 						+ sr.contents.get(i).title + " | "
 						+ sr.contents.get(i).bound.toString());
-/*
+
 				if (sr.contents.get(i).title
 						.equals("精灵王刀剑 霍比特人魔戒指环王剑工艺品装饰挂板影视包邮未开刃")) {
 					
@@ -127,7 +127,6 @@ public class Test extends UiAutomatorTestCase {
 					isFind = true;
 					break;
 				}
-*/
 			}
 
 			if (isFind)
@@ -136,9 +135,8 @@ public class Test extends UiAutomatorTestCase {
 			sr.scrollResults();
 		}
 
-		Log.d(Tag, "查看商品 上下拖动! ");
-		if (target.exists()) {
-			
+		if (target != null && target.exists()) {
+			Log.d(Tag, "查看商品 上下拖动! ");
 			try {
 				target.clickAndWaitForNewWindow();
 			} catch (UiObjectNotFoundException e) {
@@ -146,16 +144,16 @@ public class Test extends UiAutomatorTestCase {
 				e.printStackTrace();
 			}
 			
-			int width = UiDevice.getInstance().getDisplayWidth();
-			int height = UiDevice.getInstance().getDisplayHeight();
-
-			for (int tmp = 0; tmp < 6; tmp++)
-				UiDevice.getInstance().drag(width / 2, height * 2 / 3,
-						width / 2, height / 3, 30);
-
-			for (int tmp = 0; tmp < 6; tmp++)
-				UiDevice.getInstance().drag(width / 2, height / 3, width / 2,
-						height * 2 / 3, 30);
+			commodityViewer cv = new commodityViewer();
+			cv.showCommodityDetial();
+			cv.showEvaluation();
 		}
+		
+		//退出淘宝
+		UiDevice.getInstance().pressBack();
+		UiDevice.getInstance().pressBack();
+		UiDevice.getInstance().pressBack();
+		UiDevice.getInstance().pressBack();
+		UiDevice.getInstance().pressBack();
 	}
 }
