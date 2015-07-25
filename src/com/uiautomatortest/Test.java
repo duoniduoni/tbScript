@@ -1,7 +1,10 @@
 package com.uiautomatortest;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -65,36 +68,15 @@ public class Test extends UiAutomatorTestCase {
 		return true;
 	}
 	
-	private UiObject getSearchResults()
-	{
-		UiObject searchResults = new UiObject(new UiSelector().className("android.support.v7.widget.RecyclerView").resourceId("com.taobao.taobao:id/search_listview"));
-		
-		return searchResults;
-	}
-	
-	private UiObject getSearchItem(UiObject Results, int index)
-	{
-		//index 从0开始，实际检索从2+index开始
-		try {
-			if(index + 2 >= Results.getChildCount())
-				return null;
-			
-			UiObject RelativeLayout = Results.getChild(new UiSelector().index(2 + index).className("android.widget.LinearLayout").resourceId("com.taobao.taobao:layout/tbsearch_item_list_improve"));
-			UiObject RelativeLayout2 = RelativeLayout.getChild(new UiSelector().index(1).className("android.widget.RelativeLayout").resourceId("com.taobao.taobao:id/auc_maininfo_ext"));
-			UiObject item = RelativeLayout2.getChild(new UiSelector().className("android.widget.TextView").resourceId("com.taobao.taobao:id/title"));
-			
-			return item;
-			
-		} catch (UiObjectNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
 	
 	public void testDemo() {
+		
+		Bundle params = this.getParams();
+		Set<String> keys = params.keySet();
+		Iterator it = keys.iterator();  
+        while(it.hasNext()){  
+            Log.d(Tag, " key : " + it.next());
+        }  
 		
 		UiDevice.getInstance().pressHome();
 		
@@ -147,6 +129,12 @@ public class Test extends UiAutomatorTestCase {
 			commodityViewer cv = new commodityViewer();
 			cv.showCommodityDetial();
 			cv.showEvaluation();
+			
+			cv.gotoShop();
+			shopViewer sv = new shopViewer();
+			sv.selectCommodityRandomly();
+			UiDevice.getInstance().pressBack();
+			UiDevice.getInstance().pressBack();
 		}
 		
 		//退出淘宝
