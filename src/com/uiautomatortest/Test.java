@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
+import jp.jun_nama.test.utf7ime.helper.Utf7ImeHelper;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -45,13 +47,10 @@ public class Test extends UiAutomatorTestCase {
 			e.printStackTrace();
 		}
 		
-		UiObject searchEdit = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/searchedit"));
+		UiObject searchEdit = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/searchedit"));		
 		try {
-			UiDevice.getInstance().pressKeyCode(KeyEvent.KEYCODE_D);
-			UiDevice.getInstance().pressKeyCode(KeyEvent.KEYCODE_A);
-			UiDevice.getInstance().pressKeyCode(KeyEvent.KEYCODE_O);
+			searchEdit.setText(Utf7ImeHelper.e("刀"));
 	
-			UiDevice.getInstance().pressKeyCode(KeyEvent.KEYCODE_2);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
