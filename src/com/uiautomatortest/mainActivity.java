@@ -20,7 +20,10 @@ public class mainActivity implements IActivity {
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
 		if(searchEdit.exists())
+		{
 			UiDevice.getInstance().pressBack();
+			UiDevice.getInstance().pressBack();
+		}
 		
 		return true;
 	}

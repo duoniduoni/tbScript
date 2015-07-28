@@ -37,11 +37,12 @@ public class shopActivity implements IActivity {
 			
 			allList.scrollForward();
 			
-			UiObject item = allList.getChild(new UiSelector().index((int)Math.random()%4));
+			UiObject item = allList.getChild(new UiSelector().index((int)Math.random()%allList.getChildCount()));
 			if(!item.exists())
+			{
 				return false;
-			
-			item.click();
+			}
+			item.clickAndWaitForNewWindow();
 			
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block

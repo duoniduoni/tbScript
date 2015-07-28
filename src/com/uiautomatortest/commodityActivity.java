@@ -20,6 +20,14 @@ public class commodityActivity implements IActivity {
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
+			try {
+				if(btn_gotoTop.exists())
+					btn_gotoTop.click();
+			} catch (UiObjectNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		if(Evaluation.exists() && commodityDescribe.exists())
 			UiDevice.getInstance().pressBack();
 		

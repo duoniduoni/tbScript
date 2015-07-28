@@ -67,6 +67,70 @@ public class Test extends UiAutomatorTestCase {
 		return true;
 	}
 	
+	public void testDemo2()
+	{
+UiDevice.getInstance().pressHome();
+		
+		Log.d(Tag, "try to start taobao");
+		if(!startActivity("com.taobao.taobao"))
+		{
+			Log.d(Tag, "start taobao fail !");
+			return ;
+		}
+		
+		mainActivity ma = new mainActivity();
+		do {
+			if (!ma.isThisActivityRight())
+				break;
+			
+			ma.entrySearchActivity();
+
+			searchConditionActivity sa = new searchConditionActivity();
+			do {
+				if (!sa.isThisActivityRight())
+					break;
+				
+				sa.search("刀");
+				
+				searchResultsActivity sra = new searchResultsActivity();
+				do{
+					if(!sra.isThisActivityRight())
+						break;
+					sra.findAndEntryCommodity("精灵王刀剑 霍比特人魔戒指环王剑工艺品装饰挂板影视包邮未开刃", 20);
+
+					commodityActivity ca = new commodityActivity();
+					do {
+						if (!ca.isThisActivityRight())
+							break;
+						
+						ca.showCommodityDetial(16);
+						
+						ca.entryEvaluationActivity();
+						evaluationActivity ea = new evaluationActivity();
+						ea.showEvaluation();
+						ea.exitActivity();
+						
+						ca.entryShopActivity();
+						shopActivity sha = new shopActivity();
+						if (sha.entryCommodityActivityRandomly()) {
+							commodityActivity ca2 = new commodityActivity();
+							ca2.showCommodityDetial(16);
+							ca2.exitActivity();
+						}
+						else
+							Log.d(Tag, "entryCommodityActivityRandomly fail !");
+						
+						sha.exitActivity();
+						
+					} while (false);
+					ca.exitActivity();
+				}while(false);
+				sra.exitActivity();
+			} while (false);
+			sa.exitActivity();
+		} while (false);
+		ma.exitActivity();
+	}
 	
 	public void testDemo() {
 		
