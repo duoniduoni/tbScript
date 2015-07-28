@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
@@ -11,7 +12,8 @@ import com.android.uiautomator.core.UiObjectNotFoundException;
 import com.android.uiautomator.core.UiSelector;
 
 public class searchResultsActivity implements IActivity {
-
+	public String Tag = "searchResultsActivity";
+	
 	public UiObject resultsView = new UiObject(new UiSelector().className("android.support.v7.widget.RecyclerView").resourceId("com.taobao.taobao:id/search_listview"));
 	
 	class searchItem
@@ -33,6 +35,15 @@ public class searchResultsActivity implements IActivity {
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
 		return resultsView.waitForExists(timeout);
+	}
+	
+	@Override
+	public boolean exitActivity() {
+		// TODO Auto-generated method stub
+		if(resultsView.exists())
+			UiDevice.getInstance().pressBack();
+		
+		return false;
 	}
 	
 	public boolean analysisResultItems()
@@ -85,5 +96,44 @@ public class searchResultsActivity implements IActivity {
 		
 		return true;
 	}
+	
+	public boolean findAndEntryCommodity(String describe, int scrollTimes)
+	{
+		boolean isFind = false;
+		UiObject target = null;
+		for (int t = 0; t < scrollTimes; t++) {
+			analysisResultItems();
+			for (int i = 0; i < contents.size(); i++) {
+				Log.d(Tag, "the " + i + "th contehnt is "
+						+ contents.get(i).title + " | "
+						+ contents.get(i).bound.toString());
 
+				if (contents.get(i).title
+						.equals(describe)) {
+					
+					Log.d(Tag, "*******  Find the target Item !!!! ********");
+					target = contents.get(i).obj;
+					isFind = true;
+					break;
+				}
+			}
+
+			if (isFind)
+				break;
+
+			scrollResults();
+		}
+		
+		if(target == null)
+			return false;
+		
+		try {
+			return target.clickAndWaitForNewWindow();
+		} catch (UiObjectNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 }
