@@ -1,5 +1,7 @@
 package com.uiautomatortest;
 
+import android.util.Log;
+
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
 import com.android.uiautomator.core.UiObjectNotFoundException;
@@ -13,13 +15,13 @@ public class shopActivity implements IActivity {
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
-		return all.waitForExists(timeout) && allList.waitForExists(timeout);
+		return all.waitForExists(timeout);
 	}
 
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
-		if(all.exists() && allList.exists())
+		if(all.exists())
 			UiDevice.getInstance().pressBack();
 		
 		return true;
@@ -33,15 +35,20 @@ public class shopActivity implements IActivity {
 		try {
 			all.click();
 			
-			common.sleep(1000);
+			common.sleep(3000);
 			
-			allList.scrollForward();
+			allList.waitForExists(timeout);
+//			allList.scrollForward();
 			
-			UiObject item = allList.getChild(new UiSelector().index((int)Math.random()%allList.getChildCount()));
+			int index = 1;//(int)(Math.random() * 100)%allList.getChildCount();
+			UiObject item = allList.getChild(new UiSelector().index(index));
 			if(!item.exists())
 			{
+				Log.d("shopActivity", "random index is " + index + " but fail !");
 				return false;
 			}
+			
+			Log.d("shopActivity", "random index is " + index + " success ! bround is : " + item.getBounds().toString());
 			item.clickAndWaitForNewWindow();
 			
 		} catch (UiObjectNotFoundException e) {

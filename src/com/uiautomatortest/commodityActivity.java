@@ -28,7 +28,7 @@ public class commodityActivity implements IActivity {
 				e.printStackTrace();
 			}
 		
-		if(Evaluation.exists() && commodityDescribe.exists())
+		if(Evaluation.exists() || commodityDescribe.exists())
 			UiDevice.getInstance().pressBack();
 		
 		return true;
@@ -40,6 +40,11 @@ public class commodityActivity implements IActivity {
 			times = 10;
 		
 		common.scrollWindow(times);
+	}
+	
+	public void showCommodityDetialWithTimeout(int to)
+	{
+		common.scrollWindowWithTimeout(to);
 	}
 
 	public void entryShopActivity()

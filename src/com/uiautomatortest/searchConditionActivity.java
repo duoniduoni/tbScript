@@ -24,7 +24,7 @@ public class searchConditionActivity implements IActivity {
 		if(searchEdit.exists())
 			UiDevice.getInstance().pressBack();
 		
-		return false;
+		return true;
 	}
 	
 	public boolean search(String arg)

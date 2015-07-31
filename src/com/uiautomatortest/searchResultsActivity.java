@@ -13,7 +13,6 @@ import com.android.uiautomator.core.UiSelector;
 
 public class searchResultsActivity implements IActivity {
 	public String Tag = "searchResultsActivity";
-	
 	public UiObject resultsView = new UiObject(new UiSelector().className("android.support.v7.widget.RecyclerView").resourceId("com.taobao.taobao:id/search_listview"));
 	
 	class searchItem

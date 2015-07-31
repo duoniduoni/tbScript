@@ -17,6 +17,11 @@ public class evaluationActivity implements IActivity {
 	{
 		common.scrollWindow(6);
 	}
+	
+	public void showEvaluationWithTimeout(long to)
+	{
+		common.scrollWindowWithTimeout(to);
+	}
 
 	@Override
 	public boolean exitActivity() {

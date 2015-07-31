@@ -7,7 +7,7 @@ package com.uiautomatortest;
  *		每个activity提供数据并且提供数据相关操作
  */
 public interface IActivity {
-	public long timeout = 10 * 1000;
+	public long timeout = 20 * 1000;
 	
 	public boolean isThisActivityRight();
 	public boolean exitActivity();

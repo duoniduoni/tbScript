@@ -1,24 +1,16 @@
 package com.uiautomatortest;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
-
-import jp.jun_nama.test.utf7ime.helper.Utf7ImeHelper;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 
 import com.android.uiautomator.core.UiDevice;
-import com.android.uiautomator.core.UiObject;
-import com.android.uiautomator.core.UiObjectNotFoundException;
-import com.android.uiautomator.core.UiScrollable;
-import com.android.uiautomator.core.UiSelector;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 public class Test extends UiAutomatorTestCase {
 	String Tag = "taobaotest";
+	Bundle params = null;
 	
 	private boolean startActivity(String pkgName) {
 	    try {
@@ -37,39 +29,45 @@ public class Test extends UiAutomatorTestCase {
 	    return false;
 	}
 	
-	private boolean entrySearchPage()
-	{
-		UiObject searchBtn = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/home_searchedit"));
-		try {
-			searchBtn.clickAndWaitForNewWindow();
-		} catch (UiObjectNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		UiObject searchEdit = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/searchedit"));		
-		try {
-			searchEdit.setText(Utf7ImeHelper.e("刀"));
 	
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void testDemo3()
+	{
+		shopActivity sha = new shopActivity();
+		if(!sha.isThisActivityRight())
+			return ;
 		
-		UiObject searchBtn2 = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/searchbtn"));
-		try {
-			searchBtn2.clickAndWaitForNewWindow();
-		} catch (UiObjectNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (sha.entryCommodityActivityRandomly()) {
+			commodityActivity ca2 = new commodityActivity();
+			//ca2.showCommodityDetial(16);
+			ca2.exitActivity();
 		}
-		
-		return true;
+		else
+			Log.d(Tag, "entryCommodityActivityRandomly fail !");
 	}
 	
 	public void testDemo2()
 	{
-UiDevice.getInstance().pressHome();
+		params = this.getParams();
+		String SC, CD;
+		boolean IEOC;
+		long SCT, SET;
+		
+		SC = params.getString(common.SEARCHCONDITION);
+		CD = params.getString(common.COMMODITYDESCRIBE);
+		IEOC = params.getString(common.ISENTRYOTHERCOMMODITY).equals("TRUE");
+		
+		try {
+			SCT = Long.parseLong(params.getString(common.SHOWCOMMODITYTIMEOUT)) * 1000;
+			SET = Long.parseLong(params.getString(common.SHOWEVALUATIONTIMEOUT)) * 1000;
+		} catch (NumberFormatException e) {
+			// TODO: handle exception
+			Log.d(Tag, "parse timeout fail !!");
+			SCT = SET = 20 * 1000;
+		}
+		
+		Log.d(Tag, "arg is " + SC + "  |  " + CD + "  |  " + IEOC  + "  |  " + SCT + "  |  " + SET);
+		
+		UiDevice.getInstance().pressHome();
 		
 		Log.d(Tag, "try to start taobao");
 		if(!startActivity("com.taobao.taobao"))
@@ -90,38 +88,39 @@ UiDevice.getInstance().pressHome();
 				if (!sa.isThisActivityRight())
 					break;
 				
-				sa.search("刀");
+				sa.search(SC);
 				
 				searchResultsActivity sra = new searchResultsActivity();
 				do{
 					if(!sra.isThisActivityRight())
 						break;
-					sra.findAndEntryCommodity("精灵王刀剑 霍比特人魔戒指环王剑工艺品装饰挂板影视包邮未开刃", 20);
+					sra.findAndEntryCommodity(CD, 20);
 
 					commodityActivity ca = new commodityActivity();
 					do {
 						if (!ca.isThisActivityRight())
 							break;
 						
-						ca.showCommodityDetial(16);
+						ca.showCommodityDetialWithTimeout(30 * 1000);
 						
 						ca.entryEvaluationActivity();
 						evaluationActivity ea = new evaluationActivity();
-						ea.showEvaluation();
+						ea.showEvaluationWithTimeout(20 * 1000);
 						ea.exitActivity();
 						
-						ca.entryShopActivity();
-						shopActivity sha = new shopActivity();
-						if (sha.entryCommodityActivityRandomly()) {
-							commodityActivity ca2 = new commodityActivity();
-							ca2.showCommodityDetial(16);
-							ca2.exitActivity();
+						if (IEOC) {
+							ca.entryShopActivity();
+							shopActivity sha = new shopActivity();
+							if (sha.entryCommodityActivityRandomly()) {
+								commodityActivity ca2 = new commodityActivity();
+								ca2.showCommodityDetialWithTimeout(10 * 1000);
+								ca2.exitActivity();
+							} else
+								Log.d(Tag,
+										"entryCommodityActivityRandomly fail !");
+
+							sha.exitActivity();
 						}
-						else
-							Log.d(Tag, "entryCommodityActivityRandomly fail !");
-						
-						sha.exitActivity();
-						
 					} while (false);
 					ca.exitActivity();
 				}while(false);
