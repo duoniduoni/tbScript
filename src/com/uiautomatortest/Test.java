@@ -51,18 +51,53 @@ public class Test extends UiAutomatorTestCase {
 		String SC, CD;
 		boolean IEOC;
 		long SCT, SET;
+		String[] matchs;
 		
-		SC = params.getString(common.SEARCHCONDITION);
-		CD = params.getString(common.COMMODITYDESCRIBE);
-		IEOC = params.getString(common.ISENTRYOTHERCOMMODITY).equals("TRUE");
+		String paramString = params.getString(common.ARGS);
+		if(paramString == null)
+		{
+			Log.d(Tag, "get args fail !");
+			return ;
+		}
+		
+		Log.d(Tag, "paramString is " + paramString);
+		
+		String[] args = common.splitParams(paramString);
+		if(args.length != 5)
+		{
+			Log.d(Tag, "args number is wrong !   " + args.length);
+			return ;
+		}
+		
+		SC = args[common.index_SC];
+		CD = args[common.index_CD];
+		IEOC = args[common.index_IEOC].equals("TRUE");
 		
 		try {
-			SCT = Long.parseLong(params.getString(common.SHOWCOMMODITYTIMEOUT)) * 1000;
-			SET = Long.parseLong(params.getString(common.SHOWEVALUATIONTIMEOUT)) * 1000;
+			SCT = Long.parseLong(args[common.index_SCT]) * 1000;
+			SET = Long.parseLong(args[common.index_SET]) * 1000;
 		} catch (NumberFormatException e) {
 			// TODO: handle exception
 			Log.d(Tag, "parse timeout fail !!");
 			SCT = SET = 20 * 1000;
+		}
+		
+		if(SC.length() <= 0 || CD.length() <= 0)
+		{
+			Log.d(Tag, "param SC|CD is wrong !!");
+			return ;
+		}
+		
+		matchs = CD.split("#");
+		if(matchs.length < 1)
+		{
+			Log.d(Tag, "split CD wrong !!");
+			return ;
+		}
+		
+		for(String tmp:matchs)
+		{
+			Log.d(Tag, "match : " + tmp);
 		}
 		
 		Log.d(Tag, "arg is " + SC + "  |  " + CD + "  |  " + IEOC  + "  |  " + SCT + "  |  " + SET);
@@ -94,7 +129,9 @@ public class Test extends UiAutomatorTestCase {
 				do{
 					if(!sra.isThisActivityRight())
 						break;
-					sra.findAndEntryCommodity(CD, 20);
+					
+					if(!sra.findAndEntryCommodity(matchs, 30))
+						break;
 
 					commodityActivity ca = new commodityActivity();
 					do {

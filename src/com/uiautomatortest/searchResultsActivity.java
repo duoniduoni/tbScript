@@ -96,7 +96,27 @@ public class searchResultsActivity implements IActivity {
 		return true;
 	}
 	
-	public boolean findAndEntryCommodity(String describe, int scrollTimes)
+	private boolean isItemMatch(String describe, String[] matchs)
+	{
+		Log.d(Tag, "---------------------------------------");
+		Log.d(Tag, "describe : " + describe);
+		
+		for(String tmp:matchs)
+		{
+			Log.d(Tag, "match : " + tmp);
+			if(!describe.contains(tmp))
+			{
+				Log.d(Tag, "\t false");
+				return false;
+			}
+			else
+				Log.d(Tag, "\t true");
+		}
+		
+		return true;
+	}
+	
+	public boolean findAndEntryCommodity(String[] matchs, int scrollTimes)
 	{
 		boolean isFind = false;
 		UiObject target = null;
@@ -107,9 +127,8 @@ public class searchResultsActivity implements IActivity {
 						+ contents.get(i).title + " | "
 						+ contents.get(i).bound.toString());
 
-				if (contents.get(i).title
-						.equals(describe)) {
-					
+				if (isItemMatch(contents.get(i).title, matchs)) 
+				{
 					Log.d(Tag, "*******  Find the target Item !!!! ********");
 					target = contents.get(i).obj;
 					isFind = true;
