@@ -21,8 +21,17 @@ public class searchResultsActivity implements IActivity {
 			obj = arg1;
 			title = arg2;
 			bound = arg3;
+			address = "unknow";
 		}
 		
+		public searchItem(UiObject arg1, String arg2, Rect arg3, String arg4) {
+			obj = arg1;
+			title = arg2;
+			bound = arg3;
+			address = arg4;
+		}
+		
+		public String address;
 		public String title;
 		public Rect bound;
 		public UiObject obj;
@@ -125,7 +134,8 @@ public class searchResultsActivity implements IActivity {
 			for (int i = 0; i < contents.size(); i++) {
 				Log.d(Tag, "the " + i + "th contehnt is "
 						+ contents.get(i).title + " | "
-						+ contents.get(i).bound.toString());
+						+ contents.get(i).bound.toString() + " | "
+						+ contents.get(i).address);
 
 				if (isItemMatch(contents.get(i).title, matchs)) 
 				{

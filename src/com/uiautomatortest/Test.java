@@ -29,6 +29,15 @@ public class Test extends UiAutomatorTestCase {
 	    return false;
 	}
 	
+	public void testDemo()
+	{
+		searchResultsActivity2 sra = new searchResultsActivity2();
+		if (!sra.isThisActivityRight())
+			return;
+
+		String[] matchs = {"49LF5900", "49吋“， ”全高清“，”智能网络“， ”IPS"};
+		sra.findAndEntryCommodity(matchs, 30);
+	}
 	
 	public void testDemo3()
 	{
