@@ -10,36 +10,36 @@ public class commodityActivity implements IActivity {
 	public UiObject commodityDescribe = new UiObject(new UiSelector().className("android.widget.TextView").resourceId("com.taobao.taobao:id/detail_main_title_sellingpoint"));
 	public UiObject btn_gotoTop = new UiObject(new UiSelector().className("android.widget.Button").resourceId("com.taobao.taobao:id/detail_main_bottom_gotop"));
 	public UiObject entryShop = new UiObject(new UiSelector().text("삊  进店逛逛").className("android.widget.TextView").packageName("com.taobao.taobao"));
+	public UiObject listView = new UiObject(new UiSelector().resourceId("com.taobao.taobao:id/mainpage").className("android.widget.ListView"));
 	
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
-		return  Evaluation.waitForExists(timeout) && commodityDescribe.waitForExists(timeout);
+		boolean ret = listView.waitForExists(timeout);
+		
+		common.Log("listView exists : " + ret);
+		
+		return ret;
 	}
 	
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
-			try {
-				if(btn_gotoTop.exists())
-					btn_gotoTop.click();
-			} catch (UiObjectNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		common.Log("try to exit commodityActivity");
+		do
+		{
+			if(listView.exists())
+			{
+				UiDevice.getInstance().pressBack();
+				common.Log("listView is exists, press back !!");
 			}
-		
-		if(Evaluation.exists() || commodityDescribe.exists())
-			UiDevice.getInstance().pressBack();
+			else
+				break;
+			
+			common.sleep(1000);
+		}while(true);
 		
 		return true;
-	}
-	
-	public void showCommodityDetial(int times)
-	{
-		if(times < 10)
-			times = 10;
-		
-		common.scrollWindow(times);
 	}
 	
 	public void showCommodityDetialWithTimeout(int to)

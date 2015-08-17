@@ -15,18 +15,35 @@ public class searchConditionActivity implements IActivity {
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
-		return searchEdit.waitForExists(timeout) && searchBtn.waitForExists(timeout);
+		boolean ret1 = searchEdit.waitForExists(timeout);
+		boolean ret2 = searchBtn.waitForExists(timeout);
+		
+		common.Log("isThisActivityRight::searchEdit && searchBtn exists : " + ret1 + " | " + ret2);
+		
+		return  ret1 && ret2;
 	}
 
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
-		if(searchEdit.exists())
-			UiDevice.getInstance().pressBack();
+		common.Log("try to exit searchConditionActivity ");
 		
+		do
+		{
+			if(searchBtn.exists())
+			{
+				UiDevice.getInstance().pressBack();
+				common.Log("searchBtn is exists, press back !!");
+			}
+			else
+				break;
+			
+			common.sleep(1000);
+		}while(true);
+
 		return true;
 	}
-	
+
 	public boolean search(String arg)
 	{
 		try {

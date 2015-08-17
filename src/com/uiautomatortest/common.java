@@ -1,6 +1,6 @@
 package com.uiautomatortest;
 
-import android.util.Base64;
+import android.util.Log;
 
 import com.android.uiautomator.core.UiDevice;
 
@@ -10,6 +10,8 @@ public class common {
 	static public String ISENTRYOTHERCOMMODITY = "IEOC";
 	static public String SHOWCOMMODITYTIMEOUT = "SCT";
 	static public String SHOWEVALUATIONTIMEOUT = "SET";
+	
+	static public String com_tag = "taobao_make_monkey";
 	
 	static public String ARGS = "args";
 	
@@ -31,6 +33,11 @@ public class common {
 		return str.split("\\*");
 	}
 	
+	static void Log(String log)
+	{
+		Log.d(common.com_tag, log);
+	}
+	
 	static public void scrollWindow(int times)
 	{
 		int width = UiDevice.getInstance().getDisplayWidth();
@@ -46,6 +53,8 @@ public class common {
 	{
 		long timeLength = 0;
 		
+		common.Log("begin to scroll window , total time is " + timeout);
+		
 		while(timeLength < timeout)
 		{
 			long begin, end;
@@ -53,6 +62,8 @@ public class common {
 			begin = common.getTimestamp();
 			common.scrollWindow(1);
 			end = common.getTimestamp();
+			
+			common.Log("scroll window once , take time  " + (end - begin) + "   sumer time " + timeLength);
 			
 			timeLength += end - begin;
 		}

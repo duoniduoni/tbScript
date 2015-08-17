@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.core.UiObject;
@@ -42,14 +41,29 @@ public class searchResultsActivity implements IActivity {
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
-		return resultsView.waitForExists(timeout);
+		boolean ret = resultsView.waitForExists(timeout);
+		common.Log("isThisActivityRight :: resultsView waitForExists : " + ret);
+		
+		return ret; 
 	}
 	
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
-		if(resultsView.exists())
-			UiDevice.getInstance().pressBack();
+		common.Log("try to exit searchResultsActivity");
+		
+		do
+		{
+			if(resultsView.exists())
+			{
+				UiDevice.getInstance().pressBack();
+				common.Log("resultsView is exists, press back !!");
+			}
+			else
+				break;
+			
+			common.sleep(1000);
+		}while(true);
 		
 		return false;
 	}
@@ -93,6 +107,7 @@ public class searchResultsActivity implements IActivity {
 		if(contents.size() <2 )
 			return false;
 		
+		/*
 		//从搜索结果的最下方开始向上拖拽 这里不使用scroll是因为无法精确控制
 		Point begin, end;
 		searchItem tmp =  contents.get(contents.size() - 1);
@@ -101,25 +116,27 @@ public class searchResultsActivity implements IActivity {
 		end = new Point(tmp.bound.centerX(), tmp.bound.centerY());
 		
 		UiDevice.getInstance().drag(begin.x, begin.y, end.x, end.y, 100);
+		*/
+		common.scrollWindow(1);
 		
 		return true;
 	}
 	
 	private boolean isItemMatch(String describe, String[] matchs)
 	{
-		Log.d(Tag, "---------------------------------------");
-		Log.d(Tag, "describe : " + describe);
+		common.Log("---------------------------------------");
+		common.Log("describe : " + describe);
 		
 		for(String tmp:matchs)
 		{
-			Log.d(Tag, "match : " + tmp);
+			common.Log("match : " + tmp);
 			if(!describe.contains(tmp))
 			{
-				Log.d(Tag, "\t false");
+				common.Log("\t false");
 				return false;
 			}
 			else
-				Log.d(Tag, "\t true");
+				common.Log("\t true");
 		}
 		
 		return true;
@@ -132,14 +149,14 @@ public class searchResultsActivity implements IActivity {
 		for (int t = 0; t < scrollTimes; t++) {
 			analysisResultItems();
 			for (int i = 0; i < contents.size(); i++) {
-				Log.d(Tag, "the " + i + "th contehnt is "
+				common.Log("the " + i + "th contehnt is "
 						+ contents.get(i).title + " | "
 						+ contents.get(i).bound.toString() + " | "
 						+ contents.get(i).address);
 
 				if (isItemMatch(contents.get(i).title, matchs)) 
 				{
-					Log.d(Tag, "*******  Find the target Item !!!! ********");
+					common.Log("*******  Find the target Item !!!! ********");
 					target = contents.get(i).obj;
 					isFind = true;
 					break;
@@ -159,7 +176,7 @@ public class searchResultsActivity implements IActivity {
 			return target.clickAndWaitForNewWindow();
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			common.Log(e.toString());
 		}
 		
 		return false;

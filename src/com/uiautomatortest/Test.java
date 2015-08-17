@@ -3,7 +3,6 @@ package com.uiautomatortest;
 import java.io.IOException;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.android.uiautomator.core.UiDevice;
 import com.android.uiautomator.testrunner.UiAutomatorTestCase;
@@ -29,78 +28,36 @@ public class Test extends UiAutomatorTestCase {
 	    return false;
 	}
 	
+	public String testDemo3()
+	{
+		Bundle result = new Bundle();
+		result.putCharSequence("key1", "this is first key");
+		this.getAutomationSupport().sendStatus(88888, result);
+		return "hahahah";
+	}
+	
 	public void testDemo()
 	{
+		/*
 		searchResultsActivity2 sra = new searchResultsActivity2();
 		if (!sra.isThisActivityRight())
 			return;
 
 		String[] matchs = {"49LF5900", "49吋“， ”全高清“，”智能网络“， ”IPS"};
 		sra.findAndEntryCommodity(matchs, 30);
-	}
-	
-	public void testDemo3()
-	{
-		params = this.getParams();
-		String SC, CD;
-		boolean IEOC;
-		long SCT, SET;
-		String[] matchs;
+		*/
 		
-		String paramString = params.getString(common.ARGS);
-		if(paramString == null)
-		{
-			Log.d(Tag, "get args fail !");
-			return ;
-		}
+		searchConditionActivity sa = new searchConditionActivity();
 		
-		Log.d(Tag, "paramString is " + paramString);
+		common.Log( "is searchConditionActivity " + sa.isThisActivityRight());
 		
-		String[] args = common.splitParams(paramString);
-		if(args.length != 5)
-		{
-			Log.d(Tag, "args number is wrong !   " + args.length);
-			return ;
-		}
-		
-		SC = args[common.index_SC];
-		CD = args[common.index_CD];
-		IEOC = args[common.index_IEOC].equals("TRUE");
-		
-		try {
-			SCT = Long.parseLong(args[common.index_SCT]) * 1000;
-			SET = Long.parseLong(args[common.index_SET]) * 1000;
-		} catch (NumberFormatException e) {
-			// TODO: handle exception
-			Log.d(Tag, "parse timeout fail !!");
-			SCT = SET = 20 * 1000;
-		}
-		
-		if(SC.length() <= 0 || CD.length() <= 0)
-		{
-			Log.d(Tag, "param SC|CD is wrong !!");
-			return ;
-		}
-		
-		matchs = CD.split("#");
-		if(matchs.length < 1)
-		{
-			Log.d(Tag, "split CD wrong !!");
-			return ;
-		}
-		
-		for(String tmp:matchs)
-		{
-			Log.d(Tag, "match : " + tmp);
-		}
-		
-		Log.d(Tag, "arg is " + SC + "  |  " + CD + "  |  " + IEOC  + "  |  " + SCT + "  |  " + SET);
+		common.Log( "exit searchConditionActivity " + sa.exitActivity());
 	}
 	
 	public void testDemo2()
 	{
 		params = this.getParams();
-		String SC, CD;
+		String SC = "", CD = "";
 		boolean IEOC;
 		long SCT, SET;
 		String[] matchs;
@@ -108,20 +65,29 @@ public class Test extends UiAutomatorTestCase {
 		String paramString = params.getString(common.ARGS);
 		if(paramString == null)
 		{
-			Log.d(Tag, "get args fail !");
+			common.Log( "get args fail !");
 			return ;
 		}
 		
-		Log.d(Tag, "paramString is " + paramString);
+		common.Log("paramString is " + paramString);
 		
 		String[] args = common.splitParams(paramString);
 		if(args.length != 5)
 		{
-			Log.d(Tag, "args number is wrong !   " + args.length);
+			common.Log("args number is wrong !   " + args.length);
 			return ;
 		}
 		
-		SC = args[common.index_SC];
+		String old_sc = args[common.index_SC];
+		String splite_sc[] = old_sc.split("#");
+		for(int i = 0; i < splite_sc.length; i++)
+		{
+			SC += splite_sc[i];
+			
+			if(i + 1 < splite_sc.length)
+				SC += "  ";
+		}
+		
 		CD = args[common.index_CD];
 		IEOC = args[common.index_IEOC].equals("TRUE");
 		
@@ -130,36 +96,36 @@ public class Test extends UiAutomatorTestCase {
 			SET = Long.parseLong(args[common.index_SET]) * 1000;
 		} catch (NumberFormatException e) {
 			// TODO: handle exception
-			Log.d(Tag, "parse timeout fail !!");
+			common.Log( "parse timeout fail !!");
 			SCT = SET = 20 * 1000;
 		}
 		
 		if(SC.length() <= 0 || CD.length() <= 0)
 		{
-			Log.d(Tag, "param SC|CD is wrong !!");
+			common.Log( "param SC|CD is wrong !!");
 			return ;
 		}
 		
 		matchs = CD.split("#");
 		if(matchs.length < 1)
 		{
-			Log.d(Tag, "split CD wrong !!");
+			common.Log( "split CD wrong !!");
 			return ;
 		}
 		
 		for(String tmp:matchs)
 		{
-			Log.d(Tag, "match : " + tmp);
+			common.Log( "match : " + tmp);
 		}
 		
-		Log.d(Tag, "arg is " + SC + "  |  " + CD + "  |  " + IEOC  + "  |  " + SCT + "  |  " + SET);
+		common.Log( "arg is " + SC + "  |  " + CD + "  |  " + IEOC  + "  |  " + SCT + "  |  " + SET);
 		
 		UiDevice.getInstance().pressHome();
 		
-		Log.d(Tag, "try to start taobao");
+		common.Log( "try to start taobao");
 		if(!startActivity("com.taobao.taobao"))
 		{
-			Log.d(Tag, "start taobao fail !");
+			common.Log( "start taobao fail !");
 			return ;
 		}
 		
@@ -190,23 +156,25 @@ public class Test extends UiAutomatorTestCase {
 						if (!ca.isThisActivityRight())
 							break;
 						
-						ca.showCommodityDetialWithTimeout(30 * 1000);
+						ca.showCommodityDetialWithTimeout(10 * 1000);
 						
 						ca.entryEvaluationActivity();
 						evaluationActivity ea = new evaluationActivity();
-						ea.showEvaluationWithTimeout(20 * 1000);
+						ea.showEvaluationWithTimeout(10 * 1000);
+						
 						ea.exitActivity();
 						
 						if (IEOC) {
+							common.sleep(1000);
 							ca.entryShopActivity();
 							shopActivity sha = new shopActivity();
 							if (sha.entryCommodityActivityRandomly()) {
 								commodityActivity ca2 = new commodityActivity();
 								ca2.showCommodityDetialWithTimeout(10 * 1000);
-								ca2.exitActivity();
+								
+								ca2.exitActivity();								
 							} else
-								Log.d(Tag,
-										"entryCommodityActivityRandomly fail !");
+								common.Log("entryCommodityActivityRandomly fail !");
 
 							sha.exitActivity();
 						}

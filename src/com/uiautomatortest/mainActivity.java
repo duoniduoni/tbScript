@@ -13,17 +13,30 @@ public class mainActivity implements IActivity {
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
-		return searchEdit.waitForExists(timeout);
+		
+		boolean ret = searchEdit.waitForExists(timeout);
+		common.Log("isThisActivityRight::searchEdit is exists " + ret);
+		
+		return ret;
 	}
 	
 	@Override
 	public boolean exitActivity() {
 		// TODO Auto-generated method stub
-		if(searchEdit.exists())
+		common.Log("try to exit mainActivity");
+		
+		do
 		{
-			UiDevice.getInstance().pressBack();
-			UiDevice.getInstance().pressBack();
-		}
+			if(searchEdit.exists())
+			{
+				UiDevice.getInstance().pressBack();
+				common.Log("searchEdit is exists, press back !!");
+			}
+			else
+				break;
+			
+			common.sleep(500);
+		}while(true);
 		
 		return true;
 	}
@@ -31,10 +44,13 @@ public class mainActivity implements IActivity {
 	public boolean entrySearchActivity()
 	{
 		try {
-			return searchEdit.clickAndWaitForNewWindow();
+			boolean ret = searchEdit.clickAndWaitForNewWindow();
+			common.Log("entrySearchActivity::searchEdit clickAndWaitForNewWindow " + ret);
+			
+			return ret; 
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			common.Log(e.toString());
 		};
 		
 		return false;
