@@ -58,14 +58,14 @@ public class shopActivity implements IActivity {
 			}
 			
 			common.Log("random index is " + index + " success ! bround is : " + item.getBounds().toString());
-			item.clickAndWaitForNewWindow();
+			return item.clickAndWaitForNewWindow();
 			
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return true;
+		return false;
 	}
 
 }

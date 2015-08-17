@@ -7,13 +7,13 @@ import com.android.uiautomator.core.UiSelector;
 
 public class evaluationActivity implements IActivity {
 
-	UiObject actionBar = new UiObject(new UiSelector().className("android.widget.TextView").resourceId("com.taobao.taobao:id/detail_action_bar_titletext"));
+	UiObject viewFlipper = new UiObject(new UiSelector().className("android.widget.ViewFlipper").resourceId("com.taobao.taobao:id/comment_flipper"));
 	
 	@Override
 	public boolean isThisActivityRight() {
 		// TODO Auto-generated method stub
 		
-		return actionBar.waitForExists(timeout);
+		return viewFlipper.waitForExists(timeout);
 	}
 	
 	public void showEvaluation()
@@ -33,7 +33,7 @@ public class evaluationActivity implements IActivity {
 		
 		do
 		{
-			if(actionBar.exists())
+			if(viewFlipper.exists())
 			{
 				UiDevice.getInstance().pressBack();
 				common.Log("actionBar is exists, press back !!");

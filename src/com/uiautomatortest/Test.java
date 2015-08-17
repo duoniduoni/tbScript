@@ -2,6 +2,7 @@ package com.uiautomatortest;
 
 import java.io.IOException;
 
+import android.R.integer;
 import android.os.Bundle;
 
 import com.android.uiautomator.core.UiDevice;
@@ -9,53 +10,392 @@ import com.android.uiautomator.testrunner.UiAutomatorTestCase;
 
 public class Test extends UiAutomatorTestCase {
 	String Tag = "taobaotest";
-	Bundle params = null;
 	
-	private boolean startActivity(String pkgName) {
+	String resultKey = "resultKey";
+	
+	public void startTaobao() {
 	    try {
 	        Runtime.getRuntime().exec(
-	                "am start -n " + pkgName + "/com.taobao.tao.welcome.Welcome");
+	                "am start -n " + "com.taobao.taobao" + "/com.taobao.tao.welcome.Welcome");
 	        sleep(1000);
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-	    for (int i = 0; i < 5; i++) {
+	    
+	    boolean ret = false;
+	    for (int i = 0; i < 20; i++) {
 	        sleep(1000);
-	        if (getUiDevice().getCurrentPackageName().contains(pkgName)){
-	            return true;
+	        if (getUiDevice().getCurrentPackageName().contains("com.taobao.taobao")){
+	           ret = true;
+	           break;
 	        }
 	    }
-	    return false;
+	    
+	    Bundle br = new Bundle();
+	    br.putString(resultKey, "start taobao " + ret);
+	    
+	    this.getAutomationSupport().sendStatus(ret == true?0:-1, br);
 	}
 	
-	public String returnResult()
+	public void entryMainActivity()
 	{
-		Bundle result = new Bundle();
-		result.putCharSequence("key1", "this is first key");
-		this.getAutomationSupport().sendStatus(88888, result);
-		return "hahahah";
-	}
-	
-	public void testDemo()
-	{
-		/*
-		searchResultsActivity2 sra = new searchResultsActivity2();
-		if (!sra.isThisActivityRight())
-			return;
+		String strResult = "";
+		
+		do {
+			mainActivity ma = new mainActivity();
+			if(!ma.isThisActivityRight())
+			{
+				strResult = "entry mainActivity fail";
+				break;
+			}
 
-		String[] matchs = {"49LF5900", "49吋“， ”全高清“，”智能网络“， ”IPS"};
-		sra.findAndEntryCommodity(matchs, 30);
-		*/
+			if(!ma.entrySearchActivity())
+			{
+				strResult = "try to entry searchActivity fail";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void entrySearchConditionActivity()
+	{
+		String strResult = "";
+		
+		Bundle params = this.getParams();
+		String Condition = params.getString(common.ARGS);
+		
+		common.Log("Condition = " + Condition);
 		
 		searchConditionActivity sa = new searchConditionActivity();
+		do {
+			if(Condition == null)
+			{
+				strResult = "Condition is null";
+				break;
+			}
+			
+			if (!sa.isThisActivityRight())
+			{
+				strResult = "entry searchConditionActivity fail";
+				break;
+			}
+			
+			if(!sa.search(Condition))
+			{
+				strResult = "entry searchConditionActivity fail";
+				break;
+			}
+			
+			strResult = "good";
+		}while(false);
 		
-		common.Log( "is searchConditionActivity " + sa.isThisActivityRight());
-		
-		common.Log( "exit searchConditionActivity " + sa.exitActivity());
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
 	}
+	
+	public void entrySearchResultActivity()
+	{
+		String strResult = "";
+
+		Bundle params = this.getParams();
+		String args  = params.getString(common.ARGS);
+		String[] matchs = args.split("#");
+		
+		searchResultsActivity sra = new searchResultsActivity();
+		do {
+			if(matchs.length < 1)
+			{
+				strResult = "split matchs  wrong !!";
+				common.Log(strResult);
+				break;
+			}
+			
+			for(String tmp:matchs)
+			{
+				common.Log( "match : " + tmp);
+			}
+			
+			if (!sra.isThisActivityRight())
+			{
+				strResult = "entrySearchResultActivity fail";
+				break;
+			}
+
+			if (!sra.findAndEntryCommodity(matchs, 30))
+			{
+				strResult = "findAndEntryCommodity fail";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void entryCommodityActivity()
+	{
+		String strResult = "";
+		
+		Bundle params = this.getParams();
+		String args  = params.getString(common.ARGS);
+		
+		long time;
+		try {
+			time = Long.parseLong(args) * 1000;
+		} catch (NumberFormatException e) {
+			// TODO: handle exception
+			common.Log("parse showCommodityDetialWithTimeout param fail, set it to 10 seconds !!");
+			time = 10;
+		}
+		
+		common.Log("entryCommodityActivity param is " + time);
+		
+		commodityActivity ca = new commodityActivity();
+		do {
+			if (!ca.isThisActivityRight())
+			{
+				strResult = "entryCommodityActivity fail ";
+				break;
+			}
+			
+			ca.showCommodityDetialWithTimeout(time);
+			
+			strResult = "good";
+		}while(false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void entryEvaluationActivity()
+	{
+		String strResult = "";
+
+		Bundle params = this.getParams();
+		String args = params.getString(common.ARGS);
+
+		long time;
+		try {
+			time = Long.parseLong(args) * 1000;
+		} catch (NumberFormatException e) {
+			// TODO: handle exception
+			common.Log("parse showEvaluationWithTimeout param fail, set it to 10 seconds !!");
+			time = 10;
+		}
+
+		common.Log("entryEvaluationActivity param is " + time);
+		
+		commodityActivity ca = new commodityActivity();
+		evaluationActivity ea = new evaluationActivity();
+		do {
+			if (!ca.isThisActivityRight())
+			{
+				strResult = "no longer at CommodityActivity ";
+				break;
+			}
+			
+			if(!ca.entryEvaluationActivity())
+			{
+				strResult = "entryEvaluationActivity fail ";
+				//break;
+			}
+			
+			ea.showEvaluationWithTimeout(time);
+
+			if(!ea.exitActivity())
+			{
+				strResult = "entryEvaluationActivity fail ";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void entryCommodityActivityRandomly()
+	{
+		String strResult = "";
+
+		commodityActivity ca = new commodityActivity();
+		do {
+			if (!ca.isThisActivityRight()) {
+				strResult = "no longer at CommodityActivity";
+				break;
+			}
+
+			ca.entryShopActivity();
+			
+			shopActivity sha = new shopActivity();
+			if (!sha.isThisActivityRight()) 
+			{
+				strResult = "no long at shopActivity !";
+				break;
+			} 
+			
+			if (!sha.entryCommodityActivityRandomly()) 
+			{
+				strResult = "entryCommodityActivityRandomly fail !";
+				break;
+			} 
+			
+			strResult = "good";
+		} while (false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void exitCommodityActivity()
+	{
+		String strResult = "";
+		
+		commodityActivity ca = new commodityActivity();
+		do {
+			if (!ca.isThisActivityRight())
+			{
+				strResult = "entryCommodityActivity fail ";
+				break;
+			}
+			
+			if(!ca.exitActivity())
+			{
+				strResult = "exitCommodityActivity fail ";
+				break;
+			}
+			
+			strResult = "good";
+		}while(false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void exitShopActivity()
+	{
+		String strResult = "";
+
+		do {
+			shopActivity sha = new shopActivity();
+			if (!sha.isThisActivityRight()) 
+			{
+				strResult = "no long at shopActivity !";
+				break;
+			} 
+			
+			if(!sha.exitActivity())
+			{
+				strResult = "exit shopActivity fail !";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void exitSearchResultActivity()
+	{
+		String strResult = "";
+		
+		searchResultsActivity sra = new searchResultsActivity();
+		do {
+			if (!sra.isThisActivityRight())
+			{
+				strResult = "no longer at SearchResultActivity ";
+				break;
+			}
+
+			if (!sra.exitActivity())
+			{
+				strResult = "exit searchResultActivity fail";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void exitSearchConditionActivity()
+	{
+		String strResult = "";
+				
+		searchConditionActivity sa = new searchConditionActivity();
+		do {
+			if (!sa.isThisActivityRight())
+			{
+				strResult = "no longer at  searchConditionActivity ";
+				break;
+			}
+			
+			if(!sa.exitActivity())
+			{
+				strResult = "exit searchConditionActivity fail";
+				break;
+			}
+			
+			strResult = "good";
+		}while(false);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	public void exitMainActivity()
+	{
+		String strResult = "";
+		
+		do {
+			mainActivity ma = new mainActivity();
+			if(!ma.isThisActivityRight())
+			{
+				strResult = "no longer at mainActivity ";
+				break;
+			}
+
+			if(!ma.exitActivity())
+			{
+				strResult = "exit searchActivity fail";
+				break;
+			}
+			
+			strResult = "good";
+		} while (false);
+
+		Bundle br = new Bundle();
+		br.putString(resultKey, strResult);
+		this.getAutomationSupport().sendStatus(0, br);
+	}
+	
+	
 	
 	public void testDemo2()
 	{
+		/*
 		params = this.getParams();
 		String SC = "", CD = "";
 		boolean IEOC;
@@ -185,6 +525,6 @@ public class Test extends UiAutomatorTestCase {
 			} while (false);
 			sa.exitActivity();
 		} while (false);
-		ma.exitActivity();
+		ma.exitActivity();*/
 	}
 }
