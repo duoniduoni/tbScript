@@ -28,7 +28,7 @@ public class Test extends UiAutomatorTestCase {
 	    return false;
 	}
 	
-	public String testDemo3()
+	public String returnResult()
 	{
 		Bundle result = new Bundle();
 		result.putCharSequence("key1", "this is first key");
