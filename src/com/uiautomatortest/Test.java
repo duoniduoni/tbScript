@@ -70,6 +70,16 @@ public class Test extends UiAutomatorTestCase {
 		Bundle params = this.getParams();
 		String Condition = params.getString(common.ARGS);
 		
+		String splite_sc[] = Condition.split("#");
+		Condition = "";
+		for(int i = 0; i < splite_sc.length; i++)
+		{
+			Condition += splite_sc[i];
+			
+			if(i + 1 < splite_sc.length)
+				Condition += "  ";
+		}
+		
 		common.Log("Condition = " + Condition);
 		
 		searchConditionActivity sa = new searchConditionActivity();
