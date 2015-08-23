@@ -13,6 +13,18 @@ public class Test extends UiAutomatorTestCase {
 	
 	String resultKey = "resultKey";
 	
+	public void testParam()
+	{
+		Bundle params = this.getParams();
+		String args  = params.getString(common.ARGS);
+		
+		common.Log("testParam : " + args);
+		
+		Bundle br = new Bundle();
+		br.putString(resultKey, "good");
+		this.getAutomationSupport().sendStatus(1, br);
+	}
+	
 	public void startTaobao() {
 	    try {
 	        Runtime.getRuntime().exec(
@@ -32,9 +44,28 @@ public class Test extends UiAutomatorTestCase {
 	    }
 	    
 	    Bundle br = new Bundle();
-	    br.putString(resultKey, "start taobao " + ret);
+	    
+	    if(ret == true)
+	    	br.putString(resultKey, "good");
+	    else
+	    	br.putString(resultKey, "bad");
 	    
 	    this.getAutomationSupport().sendStatus(ret == true?0:-1, br);
+	}
+	
+	public void stopTaobao() {
+	    try {
+	        Runtime.getRuntime().exec(
+	                "am force-stop com.taobao.taobao");
+	        sleep(1000);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    Bundle br = new Bundle();
+	    br.putString(resultKey, "good");
+	    
+	    this.getAutomationSupport().sendStatus(1, br);
 	}
 	
 	public void entryMainActivity()

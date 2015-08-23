@@ -65,7 +65,7 @@ public class searchResultsActivity implements IActivity {
 			common.sleep(1000);
 		}while(true);
 		
-		return false;
+		return true;
 	}
 	
 	public boolean analysisResultItems()
