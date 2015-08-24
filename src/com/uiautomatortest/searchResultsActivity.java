@@ -13,6 +13,7 @@ import com.android.uiautomator.core.UiSelector;
 public class searchResultsActivity implements IActivity {
 	public String Tag = "searchResultsActivity";
 	public UiObject resultsView = new UiObject(new UiSelector().className("android.support.v7.widget.RecyclerView").resourceId("com.taobao.taobao:id/search_listview"));
+	public UiObject btn_style = new UiObject(new UiSelector().className("android.widget.RelativeLayout").resourceId("com.taobao.taobao:id/btn_style"));
 	
 	class searchItem
 	{
@@ -146,6 +147,30 @@ public class searchResultsActivity implements IActivity {
 	{
 		boolean isFind = false;
 		UiObject target = null;
+		
+		if(!btn_style.waitForExists(timeout))
+		{
+			return false;
+		}
+		
+		try {
+			while(true)
+			{
+				String des = btn_style.getContentDescription();
+				
+				common.Log("search reslut show style is " + des);
+				
+				if(des.equals("当前为列表模式"))
+					break;
+				
+				btn_style.click();
+				common.sleep(500);
+			}
+		} catch (UiObjectNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		for (int t = 0; t < scrollTimes; t++) {
 			analysisResultItems();
 			for (int i = 0; i < contents.size(); i++) {
