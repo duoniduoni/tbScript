@@ -22,15 +22,20 @@ public class searchResultsActivity implements IActivity {
 			title = arg2;
 			bound = arg3;
 			address = "unknow";
+			postfee = price = 0;
 		}
 		
-		public searchItem(UiObject arg1, String arg2, Rect arg3, String arg4) {
+		public searchItem(UiObject arg1, String arg2, Rect arg3, String arg4, float arg5, float arg6) {
 			obj = arg1;
 			title = arg2;
 			bound = arg3;
 			address = arg4;
+			price = arg5;
+			postfee = arg6;
 		}
 		
+		public float postfee;
+		public float price;
 		public String address;
 		public String title;
 		public Rect bound;
@@ -93,7 +98,31 @@ public class searchResultsActivity implements IActivity {
 				if(!item.exists())
 					continue;
 				
-				contents.add(new searchItem(item, item.getText(), RelativeLayout.getBounds()));
+				UiObject LinearLayout = RelativeLayout2.getChild(new UiSelector().index(1).resourceId("com.taobao.taobao:id/sales_area"));
+				if(!LinearLayout.exists())
+					continue;
+				
+				UiObject address = LinearLayout.getChild(new UiSelector().resourceId("com.taobao.taobao:id/area").index(2));
+				if(!address.exists())
+					continue;
+				
+				UiObject postfee = LinearLayout.getChild(new UiSelector().resourceId("com.taobao.taobao:id/postfee").index(1));
+				if(!postfee.exists())
+					continue;
+				
+				UiObject LinearLayout2 = RelativeLayout2.getChild(new UiSelector().index(3).resourceId("com.taobao.taobao:id/price_area"));
+				if(!LinearLayout2.exists())
+					continue;
+				
+				UiObject price = LinearLayout2.getChild(new UiSelector().resourceId("com.taobao.taobao:id/price").index(1));
+				if(!price.exists())
+					continue;
+				
+				//将float处理出来
+				float f_price = Float.parseFloat(price.getText());
+				float f_postfee = Float.parseFloat(postfee.getText().split("￥")[1]);
+				
+				contents.add(new searchItem(item, item.getText(), RelativeLayout.getBounds(), address.getText(), f_price, f_postfee));
 			}
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -143,7 +172,7 @@ public class searchResultsActivity implements IActivity {
 		return true;
 	}
 	
-	public boolean findAndEntryCommodity(String[] matchs, int scrollTimes)
+	public boolean findAndEntryCommodity(String[] matchs, String address, float price, float postfee, int scrollTimes)
 	{
 		boolean isFind = false;
 		UiObject target = null;
@@ -174,11 +203,54 @@ public class searchResultsActivity implements IActivity {
 		for (int t = 0; t < scrollTimes; t++) {
 			analysisResultItems();
 			for (int i = 0; i < contents.size(); i++) {
-				common.Log("the " + i + "th contehnt is "
-						+ contents.get(i).title + " | "
-						+ contents.get(i).bound.toString() + " | "
-						+ contents.get(i).address);
-
+				common.Log("the " + i + "th contehnt is : \n\t"
+						+ contents.get(i).title + "  \n\t "
+						+ contents.get(i).bound.toString() + "  \n\t "
+						+ contents.get(i).address + "  \n\t "
+						+ "price = " + contents.get(i).price + "  \n\t "
+						+ "postfee=" + contents.get(i).postfee);
+				
+				//首先匹配地址、价格、运费（如果有的话）
+				if(!address.isEmpty())
+				{
+					if(contents.get(i).address.equals(address))
+					{
+						common.Log("address match success !");
+					}
+					else
+					{
+						common.Log("address match fail !");
+						continue;
+					}
+				}
+				
+				if(price >= 0)
+				{
+					if(contents.get(i).price == price)
+					{
+						common.Log("price match success !");
+					}
+					else
+					{
+						common.Log("price match fail !");
+						continue;
+					}
+				}
+				
+				if(postfee >= 0)
+				{
+					if(contents.get(i).postfee == postfee)
+					{
+						common.Log("postfee match success !");
+					}
+					else
+					{
+						common.Log("postfee match fail !");
+						continue;
+					}
+				}
+				
+				//最后一步是描述匹配
 				if (isItemMatch(contents.get(i).title, matchs)) 
 				{
 					common.Log("*******  Find the target Item !!!! ********");

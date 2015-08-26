@@ -101,6 +101,23 @@ public class Test extends UiAutomatorTestCase {
 		Bundle params = this.getParams();
 		String Condition = params.getString(common.ARGS);
 		
+		/*
+		 *  处理空格
+		 *  这里直接将空格取代符为‘ ’（空格）
+		 */
+		String[] for_kg = Condition.split("@");
+		Condition = "";
+		for(int i = 0; i < for_kg.length; i++)
+		{
+			Condition += for_kg[i];
+			
+			if(i + 1 < for_kg.length)
+				Condition += " ";
+		}
+	
+		/*
+		 *  分割参数串
+		 */
 		String splite_sc[] = Condition.split("#");
 		Condition = "";
 		for(int i = 0; i < splite_sc.length; i++)
@@ -108,7 +125,7 @@ public class Test extends UiAutomatorTestCase {
 			Condition += splite_sc[i];
 			
 			if(i + 1 < splite_sc.length)
-				Condition += "  ";
+				Condition += " ";
 		}
 		
 		common.Log("Condition = " + Condition);
@@ -147,7 +164,74 @@ public class Test extends UiAutomatorTestCase {
 
 		Bundle params = this.getParams();
 		String args  = params.getString(common.ARGS);
-		String[] matchs = args.split("#");
+		
+		/*
+		 *  处理空格
+		 *  这里直接将空格取代符为‘ ’（空格）
+		 */
+		String[] for_kg = args.split("@");
+		args = "";
+		for(int i = 0; i < for_kg.length; i++)
+		{
+			args += for_kg[i];
+			
+			if(i + 1 < for_kg.length)
+				args += " ";
+		}
+		
+		/*
+		 *  分割参数串 : address、price、postfee和match
+		 */
+		String[] source_splite = args.split("#");
+		int source_count = source_splite.length;
+		
+		String mark_address = "address=";
+		String mark_price = "price=";
+		String mark_postfee = "postfee=";
+		
+		String address = "";
+		float price = -1, postfee = -1;
+		
+		for(String tmp:source_splite)
+		{			
+			if(tmp.startsWith(mark_address))
+			{
+				source_count -= 1;
+				address = tmp.substring(mark_address.length() );
+			}
+			else if(tmp.startsWith(mark_price))
+			{
+				source_count -= 1;
+				String str_price = tmp.substring(mark_price.length());
+				price = Float.parseFloat(str_price);
+			}
+			else if(tmp.startsWith(mark_postfee))
+			{
+				source_count -= 1;
+				String str_postfee = tmp.substring(mark_postfee.length());
+				postfee = Float.parseFloat(str_postfee);
+			}
+		}
+		
+		String[] matchs = new String[source_count];
+		int index = 0;
+		for(String tmp:source_splite)
+		{
+			if(
+					!tmp.startsWith(mark_address) &&
+					!tmp.startsWith(mark_price) &&
+					!tmp.startsWith(mark_postfee)
+					)
+					matchs[index++] = tmp;
+		}
+		
+		for(String tmp:matchs)
+		{
+			common.Log( "match : " + tmp);
+		}
+		common.Log( "address : " + address);
+		common.Log( "price : " + price);
+		common.Log( "postfee : " + postfee);
 		
 		searchResultsActivity sra = new searchResultsActivity();
 		do {
@@ -158,18 +242,13 @@ public class Test extends UiAutomatorTestCase {
 				break;
 			}
 			
-			for(String tmp:matchs)
-			{
-				common.Log( "match : " + tmp);
-			}
-			
 			if (!sra.isThisActivityRight())
 			{
 				strResult = "entrySearchResultActivity fail";
 				break;
 			}
 
-			if (!sra.findAndEntryCommodity(matchs, 30))
+			if (!sra.findAndEntryCommodity(matchs, address, price, postfee, 30))
 			{
 				strResult = "findAndEntryCommodity fail";
 				break;

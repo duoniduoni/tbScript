@@ -5,33 +5,12 @@ import android.util.Log;
 import com.android.uiautomator.core.UiDevice;
 
 public class common {
-	static public String SEARCHCONDITION = "SC";
-	static public String COMMODITYDESCRIBE = "CD";
-	static public String ISENTRYOTHERCOMMODITY = "IEOC";
-	static public String SHOWCOMMODITYTIMEOUT = "SCT";
-	static public String SHOWEVALUATIONTIMEOUT = "SET";
-	
 	static public String com_tag = "taobao_make_monkey";
 	
 	static public String ARGS = "args";
 	
-	static public int index_SC = 0;
-	static public int index_CD = 1;
-	static public int index_IEOC = 2;
-	static public int index_SCT = 3;
-	static public int index_SET = 4;
-	
-	/*
-	 * 	参数由一个字符串包裹
-	 * 	参数由5部分组成，每部分使用*分隔
-	 * 	CD由多个关键字组成，每部发使用#分隔
-	 * 	参数排列由5部分依次排列，不再使用key区分
-	 */
-	
-	static public String[] splitParams(String str)
-	{		
-		return str.split("\\*");
-	}
+	static public String strSplite = "#";
+	static public String strKg = "$";
 	
 	static void Log(String log)
 	{
