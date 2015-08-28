@@ -43,7 +43,7 @@ public class searchResultsActivity2 extends searchResultsActivity {
 				if(!item.exists())
 					continue;
 				
-				contents.add(new searchItem(item, item.getText(), RelativeLayout.getBounds(), item2.getText()));
+				contents.add(new searchItem(item, item.getText(), RelativeLayout.getBounds(), item2.getText(), -1, -1));
 			}
 		} catch (UiObjectNotFoundException e) {
 			// TODO Auto-generated catch block
